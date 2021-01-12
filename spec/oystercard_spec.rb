@@ -35,7 +35,7 @@ describe Oystercard do
 
   context 'travelling' do
     before do
-      subject.topup(Oystercard::MINIMUM_BALANCE)
+      subject.topup(Oystercard::MINIMUM_FARE)
       subject.touch_in
     end
 
@@ -46,6 +46,10 @@ describe Oystercard do
     it 'can touch out' do
       subject.touch_out
       expect(subject.in_journey).not_to be true
+    end
+
+    it 'charges minimum fare once user touches out' do
+      expect {subject.touch_out}.to change{subject.balance}.by(-1)
     end
   end
 end

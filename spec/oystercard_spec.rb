@@ -16,7 +16,7 @@ describe Oystercard do
     end
 
     it 'limits the balance to a maximum of £90' do
-      expect { subject.topup(1) }.to raise_error "Maximum balance of #{maximum_balance} exceeded"
+      expect { subject.topup(1) }.to raise_error "Maximum balance of £#{Oystercard::MAXIMUM_BALANCE} exceeded"
     end
 
     it "deducts fare from balance" do
@@ -29,8 +29,13 @@ describe Oystercard do
     expect(subject.in_journey).not_to be true
   end
 
+  it 'should raise error: insufficient funds if funds are less than £1' do
+    expect {subject.touch_in}.to raise_error "Insufficient funds"
+  end
+
   context 'travelling' do
     before do
+      subject.topup(Oystercard::MINIMUM_BALANCE)
       subject.touch_in
     end
 

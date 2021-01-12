@@ -1,7 +1,9 @@
 require "oystercard"
 
 describe Oystercard do
-  let(:station) { double :station }
+  let(:entrance_station) { double :station }
+  let(:exit_station) { double :station}
+  let(:journey){ { entrance_station: entrance_station, exit_station: exit_station } }
   it 'has a balance of zero' do
     expect(subject.balance).to eq(0)
   end
@@ -31,13 +33,17 @@ describe Oystercard do
   end
 
   it 'should raise error: insufficient funds if funds are less than £1' do
-    expect {subject.touch_in(station)}.to raise_error "Insufficient funds"
+    expect {subject.touch_in(entrance_station)}.to raise_error "Insufficient funds"
+  end
+
+  it 'has an empty list for journeys' do
+    expect(subject.journeys).to be_empty
   end
 
   context 'travelling' do
     before do
       subject.topup(Oystercard::MINIMUM_FARE)
-      subject.touch_in(station)
+      subject.touch_in(entrance_station)
     end
     
     it 'can touch in' do
@@ -45,16 +51,26 @@ describe Oystercard do
     end
 
     it 'can touch out' do
-      subject.touch_out
+      subject.touch_out(exit_station)
       expect(subject.in_journey).not_to be true
     end
 
     it 'charges minimum fare once user touches out' do
-      expect {subject.touch_out}.to change{subject.balance}.by(-1)
+      expect {subject.touch_out(exit_station)}.to change{subject.balance}.by(-1)
     end
 
     it 'stores the entry station' do
-      expect(subject.entry_station).to eq station
+      expect(subject.entry_station).to eq entrance_station
+    end
+
+    it 'stores the exit station' do
+      subject.touch_out(exit_station)
+      expect(subject.exit_station).to eq exit_station
+    end
+
+    it 'stores one journey' do
+      subject.touch_out(exit_station)
+      expect(subject.journeys).to include(journey)
     end
   end
 end

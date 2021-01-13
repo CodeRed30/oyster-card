@@ -6,9 +6,8 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @entry_station = nil
     @journey_history = []
-    @exit_station = nil
+  
     @journey = { entry_station: @entry_station, exit_station: @exit_station }
   end
 
@@ -25,8 +24,8 @@ class Oystercard
     raise "Insufficient funds" if insufficient_funds?
     # if entry station != nil
     # add journey to journey_history and reset entry station
-    @entry_station = entry_station
-    @journey[:entry_station] = @entry_station
+    journey_history << Journey.new(entry_station)
+    
     # journey to journey_history
     #else
     #  @entry_station = entry_station
@@ -47,10 +46,6 @@ class Oystercard
     #else replace exit journey in the journey journey_history
     @entry_station = nil
     @exit_station = nil
-  end
-
-  def in_journey
-    !!entry_station
   end
 
   private

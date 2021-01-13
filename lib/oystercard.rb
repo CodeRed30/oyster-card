@@ -36,6 +36,7 @@ class Oystercard
     @journeys << @journey
 
     @entry_station = nil
+    @exit_station = nil
   end
 
   def in_journey
@@ -51,8 +52,4 @@ class Oystercard
   def insufficient_funds?
     @balance < MINIMUM_FARE
   end
-  #
-  # def difference
-  #   MAXIMUM_BALANCE - @balance
-  # end
 end

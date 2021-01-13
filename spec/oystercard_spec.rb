@@ -1,4 +1,4 @@
-require "oystercard"
+require 'oystercard'
 
 describe Oystercard do
   let(:entrance_station) { double :station }
@@ -45,7 +45,7 @@ describe Oystercard do
       subject.topup(Oystercard::MINIMUM_FARE)
       subject.touch_in(entrance_station)
     end
-    
+
     it 'can touch in' do
       expect(subject.in_journey).to be true
     end
@@ -62,11 +62,11 @@ describe Oystercard do
     it 'stores the entry station' do
       expect(subject.entry_station).to eq entrance_station
     end
-
-    it 'stores the exit station' do
-      subject.touch_out(exit_station)
-      expect(subject.exit_station).to eq exit_station
-    end
+    #
+    # it 'stores the exit station' do
+    #   subject.touch_out(exit_station)
+    #   expect(subject.exit_station).to eq exit_station
+    # end
 
     it 'stores one journey' do
       subject.touch_out(exit_station)
